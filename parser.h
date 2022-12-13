@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 
+// Constructor
 class parser
 {
 public:
@@ -23,6 +24,7 @@ public:
         Command = cmd;
     }
 
+    // Print format
     void print()
     {
         printf(
@@ -35,40 +37,42 @@ public:
             Command.c_str());
     }
 
+    // Parse method
     std::vector<int> parse(std::string s, int t)
     {
+        // Set boundaries for each value
         int beg;
         int end;
 
-        if(t == 0)
+        if(t == 0) // Minute
         {
             beg = 0;
             end = 59;
         }
-        else if (t == 1)
+        else if (t == 1) // Hour
         {
             beg = 0;
             end = 23;
         }
-        else if (t == 2)
+        else if (t == 2) // Day of Month
         {
             beg = 1;
             end = 31;
         }
-        else if (t == 3)
+        else if (t == 3) // Month
         {
             beg = 1;
             end = 12;
         }
-        else if (t == 4)
+        else if (t == 4) // Day of Week
         {
             beg = 1;
             end = 7;
         }
 
-        std::vector<int> res;
+        std::vector<int> res; // Vector for result value
 
-        std::map<std::string, std::string> months;
+        std::map<std::string, std::string> months; // Mapping for month as a word (NOV, JAN etc)
 
         months["JAN"] = "1";
         months["FEB"] = "2";
@@ -94,6 +98,7 @@ public:
 
         } 
 
+        // Star case
         if (s == "*")
         {
             for (int i = beg; i <= end; i++)
@@ -103,8 +108,9 @@ public:
             return res;
         }
 
-        std::vector<std::string> tmp;
+        std::vector<std::string> tmp; // Temporary vector
         
+        // Coloumn case
         if (s.find(",") != -1)
         {
             std::string sign = ",";
@@ -126,14 +132,15 @@ public:
             tmp.push_back(s);
         }
 
+        // Dash case
         for (int i = 0; i < tmp.size(); i++)
         {
             if (tmp[i].find("-") != -1)
             {
                 try
                 { 
-                    int fir = std::stoi(tmp[i].substr(0, tmp[i].find("-"))); // 11
-                    int sec = std::stoi(tmp[i].substr(tmp[i].find("-") + 1)); // 3
+                    int fir = std::stoi(tmp[i].substr(0, tmp[i].find("-"))); 
+                    int sec = std::stoi(tmp[i].substr(tmp[i].find("-") + 1));
 
                     if (sec < fir)
                     {
@@ -163,6 +170,8 @@ public:
                     exit(0);
                 }
             }
+
+            // Slash value
             if (tmp[i].find("/") != -1)
             {
                 try
@@ -193,6 +202,7 @@ public:
         return res;
     }
 
+    // Formatting
     std::string join(std::vector<int> &s)
     {
         std::stringstream sstream;
@@ -209,6 +219,7 @@ public:
         return sstream.str();
     }
 
+    // Output formatting for UAT
     std::string output()
     {
         return join(Minutes) + "\n" + join(Hours) + "\n" + join(DaysOfMonth) + "\n" + join(Months) + "\n" + join(DaysOfWeek) + "\n" + Command + "\n";
